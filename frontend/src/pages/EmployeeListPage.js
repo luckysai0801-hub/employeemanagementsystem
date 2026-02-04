@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/EmployeeListPage.css';
@@ -15,8 +15,8 @@ function EmployeeListPage({ user, onLogout }) {
   const [department, setDepartment] = useState('');
   const [departments, setDepartments] = useState([]);
   const [status, setStatus] = useState('');
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [sortBy] = useState('name');
+  const [sortOrder] = useState('asc');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
@@ -36,12 +36,7 @@ function EmployeeListPage({ user, onLogout }) {
 
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-    fetchDepartments();
-    fetchEmployees();
-  }, [page, limit, search, department, status, sortBy, sortOrder]);
-
-  const fetchDepartments = async () => {
+  const fetchDepartments = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(`${BACKEND_URL}/api/departments`, {
@@ -51,9 +46,9 @@ function EmployeeListPage({ user, onLogout }) {
     } catch (err) {
       console.error('Failed to fetch departments:', err);
     }
-  };
+  }, []);
 
-  const fetchEmployees = async () => {
+  const fetchEmployees = useCallback(async () => {
     try {
       setLoading(true);
       setError('');
@@ -85,7 +80,12 @@ function EmployeeListPage({ user, onLogout }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, limit, search, department, status, sortBy, sortOrder]);
+
+  useEffect(() => {
+    fetchDepartments();
+    fetchEmployees();
+  }, [fetchDepartments, fetchEmployees]);
 
   const handleAddEmployee = async (e) => {
     e.preventDefault();

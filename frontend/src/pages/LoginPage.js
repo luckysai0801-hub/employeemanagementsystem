@@ -6,7 +6,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8000'
 
 function LoginPage({ onLogin }) {
   const [username, setUsername] = useState('phanendra');
-  const [password, setPassword] = useState('123456');
+  const [password, setPassword] = useState('12345run.bat');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 

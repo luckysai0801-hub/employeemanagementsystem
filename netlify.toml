@@ -1,0 +1,12 @@
+[build]
+  command = "cd frontend && npm install && npm run build"
+  publish = "frontend/build"
+
+[dev]
+  command = "cd frontend && npm start"
+  port = 3000
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
